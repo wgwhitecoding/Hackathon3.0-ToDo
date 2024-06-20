@@ -1,28 +1,106 @@
+.kanban-board-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
 .kanban-board {
     display: flex;
-    justify-content: space-around;
-    padding: 20px;
+    justify-content: space-between;
+    gap: 20px;
 }
 
 .kanban-column {
-    width: 30%;
-    background: #f8f9fa;
-    border-radius: 10px;
+    flex: 1;
     padding: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-.kanban-column h2 {
-    text-align: center;
-    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #f9f9f9;
+    max-height: 600px;
+    overflow-y: auto;
+    width: 32%; /* Adjust the width to make columns wider */
 }
 
 .kanban-item {
-    background: white;
-    border-radius: 5px;
-    margin-bottom: 10px;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
     padding: 10px;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-    cursor: move;
+    margin-bottom: 10px;
+    position: relative; /* Added for positioning the priority circle */
 }
+
+.kanban-summary {
+    cursor: pointer;
+}
+
+.priority-circle {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    display: inline-block;
+    position: absolute; /* Positioning the priority circle */
+    top: 10px;
+    right: 10px;
+}
+
+.priority-circle.low {
+    background-color: #00ff00; /* Bright green */
+}
+
+.priority-circle.medium {
+    background-color: #ffbf00; /* Amber */
+}
+
+.priority-circle.high {
+    background-color: #ff0000; /* Red */
+}
+
+.priority-options {
+    display: flex;
+    gap: 5px;
+}
+
+.priority-options button {
+    border: none;
+    background: none;
+    cursor: pointer;
+    padding: 0;
+    margin: 0;
+}
+
+.btn-group {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.todo-form .form-group {
+    margin-bottom: 15px;
+}
+
+select.form-control {
+    background-color: #fff; 
+}
+
+select.form-control.low {
+    background-color: #00ff00; 
+}
+
+select.form-control.medium {
+    background-color: #ffbf00;
+}
+
+select.form-control.high {
+    background-color: #ff0000; 
+}
+
+
+
+
+
+
+
+
 

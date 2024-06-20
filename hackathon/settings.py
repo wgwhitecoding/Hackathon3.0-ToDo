@@ -22,8 +22,8 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'django.contrib.staticfiles',
-    'django.contrib.sites',  # Required for django-allauth
-    'todo',  # Your app(s) here
+    'django.contrib.sites', 
+    'todo', 
 ]
 
 MIDDLEWARE = [

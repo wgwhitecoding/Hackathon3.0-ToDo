@@ -1,56 +1,218 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}Kanban Board{% endblock %}
+{% block head_title %}Kanban Board{% endblock head_title %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/kanban_board.css' %}">
+{% endblock extra_css %}
 
 {% block content %}
-<h1>Kanban Board</h1>
-<div class="kanban-board">
-    <div class="kanban-column" id="todo-column">
-        <h2>To Do</h2>
-        <div id="todo-items">
-            {% for todo in todos %}
-                {% if todo.stage == 'todo' %}
-                    <div class="kanban-item" data-id="{{ todo.id }}">
-                        {{ todo.title }}
-                    </div>
-                {% endif %}
-            {% endfor %}
+<div class="container mt-5">
+    <h1>Kanban Board</h1>
+    <div class="kanban-board-container">
+        <div class="kanban-board-headers">
+            <h2>To Do</h2>
+            <h2>In Progress</h2>
+            <h2>Done</h2>
         </div>
-    </div>
-    <div class="kanban-column" id="inprogress-column">
-        <h2>In Progress</h2>
-        <div id="inprogress-items">
-            {% for todo in todos %}
-                {% if todo.stage == 'in_progress' %}
-                    <div class="kanban-item" data-id="{{ todo.id }}">
-                        {{ todo.title }}
-                    </div>
-                {% endif %}
-            {% endfor %}
-        </div>
-    </div>
-    <div class="kanban-column" id="done-column">
-        <h2>Done</h2>
-        <div id="done-items">
-            {% for todo in todos %}
-                {% if todo.stage == 'done' %}
-                    <div class="kanban-item" data-id="{{ todo.id }}">
-                        {{ todo.title }}
-                    </div>
-                {% endif %}
-            {% endfor %}
+        <div class="kanban-board">
+            <div class="kanban-column" id="todo-column">
+                <div id="todo-items">
+                    {% for todo in todos %}
+                        {% if todo.stage == 'todo' %}
+                            <div class="kanban-item" data-id="{{ todo.id }}">
+                                <div class="kanban-summary">
+                                    <strong>{{ todo.title }}</strong>
+                                    <p>Due: {{ todo.due_date|date:"d/m/Y, H:i:s" }}</p>
+                                    <div class="priority-circle {{ todo.priority }}" data-id="{{ todo.id }}"></div>
+                                    <div class="priority-options d-none">
+                                        <button class="low" data-priority="low">Low Priority</button>
+                                        <button class="medium" data-priority="medium">Medium Priority</button>
+                                        <button class="high" data-priority="high">High Priority</button>
+                                    </div>
+                                </div>
+                                <div class="kanban-details d-none">
+                                    <form>
+                                        {% csrf_token %}
+                                        <input type="hidden" name="id" value="{{ todo.id }}">
+                                        <div class="form-group">
+                                            <label for="title">Title</label>
+                                            <input type="text" class="form-control" name="title" value="{{ todo.title }}" readonly>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="description">Description</label>
+                                            <textarea class="form-control" name="description" readonly style="height: 100px;">{{ todo.description }}</textarea>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="due_date">Due Date</label>
+                                            <input type="datetime-local" class="form-control" name="due_date" value="{{ todo.due_date|date:'Y-m-d\TH:i' }}" readonly>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="priority">Priority</label>
+                                            <select class="form-control {{ todo.priority }}" name="priority" disabled>
+                                                <option value="low" {% if todo.priority == 'low' %}selected{% endif %}>Low</option>
+                                                <option value="medium" {% if todo.priority == 'medium' %}selected{% endif %}>Medium</option>
+                                                <option value="high" {% if todo.priority == 'high' %}selected{% endif %}>High</option>
+                                            </select>
+                                        </div>
+                                        <div class="btn-group">
+                                            <button type="button" class="btn btn-primary edit-todo">Edit</button>
+                                            <button type="button" class="btn btn-success save-todo d-none">Save</button>
+                                            <button type="button" class="btn btn-secondary close-todo">Close</button>
+                                            <button type="button" class="btn btn-danger delete-todo">Delete</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                <button class="btn btn-primary mt-3 add-todo">Add ToDo</button>
+                <div class="todo-form d-none">
+                    <form id="new-todo-form">
+                        {% csrf_token %}
+                        <input type="hidden" name="stage" value="todo">
+                        <input type="hidden" name="id" id="todo-id">
+                        <div class="form-group">
+                            <label for="title">Title</label>
+                            <input type="text" class="form-control" name="title" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="description">Description</label>
+                            <textarea class="form-control" name="description" required style="height: 100px;"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="due_date">Due Date</label>
+                            <input type="datetime-local" class="form-control" name="due_date" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="priority">Priority</label>
+                            <select class="form-control" name="priority" required>
+                                <option value="low">Low</option>
+                                <option value="medium">Medium</option>
+                                <option value="high">High</option>
+                            </select>
+                        </div>
+                        <div class="btn-group">
+                            <button type="submit" class="btn btn-success">Save</button>
+                            <button type="button" class="btn btn-secondary cancel-todo">Close</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="kanban-column" id="inprogress-column">
+                <div id="inprogress-items">
+                    {% for todo in todos %}
+                        {% if todo.stage == 'in_progress' %}
+                            <div class="kanban-item" data-id="{{ todo.id }}">
+                                <div class="kanban-summary">
+                                    <strong>{{ todo.title }}</strong>
+                                    <p>Due: {{ todo.due_date|date:"d/m/Y, H:i:s" }}</p>
+                                    <div class="priority-circle {{ todo.priority }}" data-id="{{ todo.id }}"></div>
+                                    <div class="priority-options d-none">
+                                        <button class="low" data-priority="low">Low Priority</button>
+                                        <button class="medium" data-priority="medium">Medium Priority</button>
+                                        <button class="high" data-priority="high">High Priority</button>
+                                    </div>
+                                </div>
+                                <div class="kanban-details d-none">
+                                    <form>
+                                        {% csrf_token %}
+                                        <input type="hidden" name="id" value="{{ todo.id }}">
+                                        <div class="form-group">
+                                            <label for="title">Title</label>
+                                            <input type="text" class="form-control" name="title" value="{{ todo.title }}" readonly>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="description">Description</label>
+                                            <textarea class="form-control" name="description" readonly style="height: 100px;">{{ todo.description }}</textarea>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="due_date">Due Date</label>
+                                            <input type="datetime-local" class="form-control" name="due_date" value="{{ todo.due_date|date:'Y-m-d\TH:i' }}" readonly>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="priority">Priority</label>
+                                            <select class="form-control {{ todo.priority }}" name="priority" disabled>
+                                                <option value="low" {% if todo.priority == 'low' %}selected{% endif %}>Low</option>
+                                                <option value="medium" {% if todo.priority == 'medium' %}selected{% endif %}>Medium</option>
+                                                <option value="high" {% if todo.priority == 'high' %}selected{% endif %}>High</option>
+                                            </select>
+                                        </div>
+                                        <div class="btn-group">
+                                            <button type="button" class="btn btn-primary edit-todo">Edit</button>
+                                            <button type="button" class="btn btn-success save-todo d-none">Save</button>
+                                            <button type="button" class="btn btn-secondary close-todo">Close</button>
+                                            <button type="button" class="btn btn-danger delete-todo">Delete</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="kanban-column" id="done-column">
+                <div id="done-items">
+                    {% for todo in todos %}
+                        {% if todo.stage == 'done' %}
+                            <div class="kanban-item" data-id="{{ todo.id }}">
+                                <div class="kanban-summary">
+                                    <strong>{{ todo.title }}</strong>
+                                    <p>Due: {{ todo.due_date|date:"d/m/Y, H:i:s" }}</p>
+                                    <div class="priority-circle {{ todo.priority }}" data-id="{{ todo.id }}"></div>
+                                    <div class="priority-options d-none">
+                                        <button class="low" data-priority="low">Low Priority</button>
+                                        <button class="medium" data-priority="medium">Medium Priority</button>
+                                        <button class="high" data-priority="high">High Priority</button>
+                                    </div>
+                                </div>
+                                <div class="kanban-details d-none">
+                                    <form>
+                                        {% csrf_token %}
+                                        <input type="hidden" name="id" value="{{ todo.id }}">
+                                        <div class="form-group">
+                                            <label for="title">Title</label>
+                                            <input type="text" class="form-control" name="title" value="{{ todo.title }}" readonly>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="description">Description</label>
+                                            <textarea class="form-control" name="description" readonly style="height: 100px;">{{ todo.description }}</textarea>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="due_date">Due Date</label>
+                                            <input type="datetime-local" class="form-control" name="due_date" value="{{ todo.due_date|date:'Y-m-d\TH:i' }}" readonly>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="priority">Priority</label>
+                                            <select class="form-control {{ todo.priority }}" name="priority" disabled>
+                                                <option value="low" {% if todo.priority == 'low' %}selected{% endif %}>Low</option>
+                                                <option value="medium" {% if todo.priority == 'medium' %}selected{% endif %}>Medium</option>
+                                                <option value="high" {% if todo.priority == 'high' %}selected{% endif %}>High</option>
+                                            </select>
+                                        </div>
+                                        <div class="btn-group">
+                                            <button type="button" class="btn btn-primary edit-todo">Edit</button>
+                                            <button type="button" class="btn btn-success save-todo d-none">Save</button>
+                                            <button type="button" class="btn btn-secondary close-todo">Close</button>
+                                            <button type="button" class="btn btn-danger delete-todo">Delete</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
         </div>
     </div>
 </div>
-{% endblock %}
+{% endblock content %}
 
 {% block scripts %}
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.14.0/Sortable.min.js"></script>
 <script src="{% static 'js/kanban_board.js' %}"></script>
-{% endblock %}
-
-
-
+{% endblock scripts %}
 
 

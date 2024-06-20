@@ -1,36 +1,47 @@
-document.addEventListener('DOMContentLoaded', function () {
-    const todoColumn = document.getElementById('todo-items');
-    const inProgressColumn = document.getElementById('inprogress-items');
-    const doneColumn = document.getElementById('done-items');
+// static/js/kanban_board.js
 
-    [todoColumn, inProgressColumn, doneColumn].forEach(column => {
-        new Sortable(column, {
-            group: 'kanban',
-            animation: 150,
-            onEnd: function (evt) {
-                const itemId = evt.item.dataset.id;
-                let newStage;
-                if (evt.to.id === 'todo-items') {
-                    newStage = 'todo';
-                } else if (evt.to.id === 'inprogress-items') {
-                    newStage = 'in_progress';
-                } else if (evt.to.id === 'done-items') {
-                    newStage = 'done';
-                }
-                updateStage(itemId, newStage);
-            }
-        });
+document.addEventListener('DOMContentLoaded', function() {
+    var todoColumn = document.getElementById('todo-items');
+    var inProgressColumn = document.getElementById('inprogress-items');
+    var doneColumn = document.getElementById('done-items');
+
+    new Sortable(todoColumn, {
+        group: 'kanban',
+        animation: 150,
+        onEnd: function (evt) {
+            updateTaskStage(evt.item, 'todo');
+        }
     });
 
-    function updateStage(itemId, newStage) {
-        fetch(`/update_stage/${itemId}/${newStage}/`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': getCookie('csrftoken'),
-            },
-            body: JSON.stringify({ stage: newStage }),
-        });
+    new Sortable(inProgressColumn, {
+        group: 'kanban',
+        animation: 150,
+        onEnd: function (evt) {
+            updateTaskStage(evt.item, 'in_progress');
+        }
+    });
+
+    new Sortable(doneColumn, {
+        group: 'kanban',
+        animation: 150,
+        onEnd: function (evt) {
+            updateTaskStage(evt.item, 'done');
+        }
+    });
+
+    function updateTaskStage(item, stage) {
+        var taskId = item.getAttribute('data-id');
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', `/update_stage/${taskId}/${stage}/`);
+        xhr.setRequestHeader('X-CSRFToken', getCookie('csrftoken'));
+        xhr.onload = function() {
+            if (xhr.status === 200) {
+                console.log('Stage updated');
+            } else {
+                console.error('Failed to update stage');
+            }
+        };
+        xhr.send();
     }
 
     function getCookie(name) {
@@ -48,5 +59,7 @@ document.addEventListener('DOMContentLoaded', function () {
         return cookieValue;
     }
 });
+
+
 
 

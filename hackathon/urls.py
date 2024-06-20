@@ -14,6 +14,8 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+# hackathon/urls.py
+
 from django.contrib import admin
 from django.urls import path, include
 from todo import views as todo_views
@@ -25,7 +27,10 @@ urlpatterns = [
     path('add_todo/', todo_views.add_todo, name='add_todo'),
     path('edit_todo/<int:todo_id>/', todo_views.edit_todo, name='edit_todo'),
     path('update_stage/<int:todo_id>/<str:stage>/', todo_views.update_stage, name='update_stage'),
+    path('delete_todo/<int:todo_id>/', todo_views.delete_todo, name='delete_todo'),
 ]
+
+
 
 
 
