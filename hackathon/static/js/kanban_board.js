@@ -36,6 +36,11 @@ document.addEventListener('DOMContentLoaded', function() {
         todoForm.classList.remove('d-none');
         newTodoForm.reset();
         todoIdField.value = '';
+        moveToTop(todoForm, addTodoButton.parentElement);
+    });
+
+    document.querySelector('.cancel-todo').addEventListener('click', function() {
+        todoForm.classList.add('d-none');
     });
 
     newTodoForm.addEventListener('submit', function(event) {
@@ -116,7 +121,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     document.addEventListener('click', function(event) {
-        if (event.target.classList.contains('kanban-summary')) {
+        if (event.target.closest('.kanban-summary')) {
             var itemId = event.target.closest('.kanban-item').getAttribute('data-id');
             toggleTaskDetails(itemId);
         }
@@ -154,6 +159,7 @@ document.addEventListener('DOMContentLoaded', function() {
         var item = document.querySelector(`.kanban-item[data-id="${id}"]`);
         var details = item.querySelector('.kanban-details');
         details.classList.toggle('d-none');
+        moveToTop(item, item.closest('.kanban-column'));
     }
 
     function enableTaskEditing(id) {
@@ -183,6 +189,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 item.querySelector('.kanban-summary p').innerText = `Due: ${new Date(updatedTodo.due_date).toLocaleString()}`;
                 item.querySelector('.priority-circle').className = `priority-circle ${updatedTodo.priority}`;
                 item.querySelector('.form-control[name="priority"]').className = `form-control ${updatedTodo.priority}`;
+                item.querySelector('.form-control[name="priority"]').value = updatedTodo.priority;
                 closeTaskDetails(id);
             } else {
                 console.error('Failed to update todo', xhr.responseText);
@@ -260,17 +267,21 @@ document.addEventListener('DOMContentLoaded', function() {
         var circle = button.closest('.kanban-summary').querySelector('.priority-circle');
         var itemId = circle.getAttribute('data-id');
 
+        // Instantly update the UI
+        circle.className = `priority-circle ${priority}`;
+        var prioritySelect = circle.closest('.kanban-item').querySelector('.form-control[name="priority"]');
+        prioritySelect.className = `form-control ${priority}`;
+        prioritySelect.value = priority;
+        button.closest('.priority-options').classList.add('d-none');
+
+        // Send the priority change to the server
         var xhr = new XMLHttpRequest();
         xhr.open('POST', `/change_priority/${itemId}/`);
         xhr.setRequestHeader('X-CSRFToken', getCookie('csrftoken'));
         xhr.setRequestHeader('Content-Type', 'application/json');
         xhr.onload = function() {
             if (xhr.status === 200) {
-                circle.className = `priority-circle ${priority}`;
-                button.closest('.priority-options').classList.add('d-none');
-                var prioritySelect = circle.closest('.kanban-item').querySelector('.form-control[name="priority"]');
-                prioritySelect.className = `form-control ${priority}`;
-                prioritySelect.value = priority;
+                console.log('Priority changed');
             } else {
                 console.error('Failed to change priority', xhr.responseText);
                 alert('Failed to change priority: ' + xhr.responseText);
@@ -281,6 +292,10 @@ document.addEventListener('DOMContentLoaded', function() {
             alert('Network error');
         };
         xhr.send(JSON.stringify({ priority: priority }));
+    }
+
+    function moveToTop(element, container) {
+        container.insertBefore(element, container.firstChild);
     }
 
     function getCookie(name) {
@@ -298,6 +313,12 @@ document.addEventListener('DOMContentLoaded', function() {
         return cookieValue;
     }
 });
+
+
+
+
+
+
 
 
 

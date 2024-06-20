@@ -1,100 +1,125 @@
-.kanban-board-container {
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
     display: flex;
-    flex-direction: column;
-    gap: 20px;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.container {
+    width: 100%;
+}
+
+.kanban-board-container {
+    width: 100%;
+    margin: auto;
+}
+
+.kanban-board-headers {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+}
+
+.kanban-board-headers h2 {
+    width: 30%;
+    text-align: center;
 }
 
 .kanban-board {
     display: flex;
-    justify-content: space-between;
-    gap: 20px;
+    justify-content: space-around;
 }
 
 .kanban-column {
-    flex: 1;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    background-color: #f9f9f9;
-    max-height: 600px;
+    width: 30%;
+    display: flex;
+    flex-direction: column;
+    height: 60vh; /* Fixed height */
     overflow-y: auto;
-    width: 32%; /* Adjust the width to make columns wider */
-}
-
-.kanban-item {
-    background-color: white;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+    background-color: #fff;
+    margin: 10px;
     padding: 10px;
-    margin-bottom: 10px;
-    position: relative; /* Added for positioning the priority circle */
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .kanban-summary {
-    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.kanban-summary strong {
+    margin-bottom: 5px;
+}
+
+.kanban-summary p {
+    margin: 0;
 }
 
 .priority-circle {
     width: 15px;
     height: 15px;
     border-radius: 50%;
-    display: inline-block;
-    position: absolute; /* Positioning the priority circle */
-    top: 10px;
-    right: 10px;
+    position: absolute;
+    top: 5px;
+    right: 5px;
 }
 
 .priority-circle.low {
-    background-color: #00ff00; /* Bright green */
+    background-color: green;
 }
 
 .priority-circle.medium {
-    background-color: #ffbf00; /* Amber */
+    background-color: orange;
 }
 
 .priority-circle.high {
-    background-color: #ff0000; /* Red */
+    background-color: red;
 }
 
 .priority-options {
+    position: absolute;
+    z-index: 1000;
     display: flex;
-    gap: 5px;
+    flex-direction: column;
+    top: 25px; /* Below the circle */
+    right: 5px;
 }
 
 .priority-options button {
-    border: none;
-    background: none;
-    cursor: pointer;
-    padding: 0;
-    margin: 0;
+    margin: 2px 0;
+}
+
+.todo-form, .kanban-details {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.todo-form form, .kanban-details form {
+    display: flex;
+    flex-direction: column;
 }
 
 .btn-group {
     display: flex;
     justify-content: space-between;
-    gap: 10px;
-    margin-top: 10px;
 }
 
-.todo-form .form-group {
-    margin-bottom: 15px;
+.btn-group .btn {
+    flex: 1;
+    margin: 2px;
 }
 
-select.form-control {
-    background-color: #fff; 
-}
 
-select.form-control.low {
-    background-color: #00ff00; 
-}
 
-select.form-control.medium {
-    background-color: #ffbf00;
-}
 
-select.form-control.high {
-    background-color: #ff0000; 
-}
+
+
 
 
 
