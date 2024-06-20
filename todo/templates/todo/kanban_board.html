@@ -1,5 +1,7 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 {% load static %}
+
+{% block title %}Kanban Board{% endblock %}
 
 {% block content %}
 <h1>Kanban Board</h1>
@@ -8,12 +10,11 @@
         <h2>To Do</h2>
         <div id="todo-items">
             {% for todo in todos %}
-            {% if todo.stage == 'todo' %}
-            <div class="kanban-item" data-id="{{ todo.id }}">
-                <h3>{{ todo.title }}</h3>
-                <p>{{ todo.description }}</p>
-            </div>
-            {% endif %}
+                {% if todo.stage == 'todo' %}
+                    <div class="kanban-item" data-id="{{ todo.id }}">
+                        {{ todo.title }}
+                    </div>
+                {% endif %}
             {% endfor %}
         </div>
     </div>
@@ -21,12 +22,11 @@
         <h2>In Progress</h2>
         <div id="inprogress-items">
             {% for todo in todos %}
-            {% if todo.stage == 'in_progress' %}
-            <div class="kanban-item" data-id="{{ todo.id }}">
-                <h3>{{ todo.title }}</h3>
-                <p>{{ todo.description }}</p>
-            </div>
-            {% endif %}
+                {% if todo.stage == 'in_progress' %}
+                    <div class="kanban-item" data-id="{{ todo.id }}">
+                        {{ todo.title }}
+                    </div>
+                {% endif %}
             {% endfor %}
         </div>
     </div>
@@ -34,12 +34,11 @@
         <h2>Done</h2>
         <div id="done-items">
             {% for todo in todos %}
-            {% if todo.stage == 'done' %}
-            <div class="kanban-item" data-id="{{ todo.id }}">
-                <h3>{{ todo.title }}</h3>
-                <p>{{ todo.description }}</p>
-            </div>
-            {% endif %}
+                {% if todo.stage == 'done' %}
+                    <div class="kanban-item" data-id="{{ todo.id }}">
+                        {{ todo.title }}
+                    </div>
+                {% endif %}
             {% endfor %}
         </div>
     </div>
@@ -50,6 +49,7 @@
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.14.0/Sortable.min.js"></script>
 <script src="{% static 'js/kanban_board.js' %}"></script>
 {% endblock %}
+
 
 
 

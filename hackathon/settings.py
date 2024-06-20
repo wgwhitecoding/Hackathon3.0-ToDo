@@ -1,5 +1,3 @@
-# settings.py
-
 import os
 from pathlib import Path
 from dotenv import load_dotenv
@@ -9,7 +7,6 @@ load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Quick-start development settings - unsuitable for production
 SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-@p9wgtikz)kwpz85dn8m&%tnd$bg_4flkq%pkf^#wq5pmjc=r&')
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
@@ -21,12 +18,12 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'django.contrib.sites',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-    'todo',
+    'django.contrib.staticfiles',
+    'django.contrib.sites',  # Required for django-allauth
+    'todo',  # Your app(s) here
 ]
 
 MIDDLEWARE = [
@@ -37,7 +34,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'allauth.account.middleware.AccountMiddleware',
+    'allauth.account.middleware.AccountMiddleware', 
 ]
 
 ROOT_URLCONF = 'hackathon.urls'
@@ -53,6 +50,9 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.static', 
+                'django.template.context_processors.media',  
+                'django.template.context_processors.request',
             ],
         },
     },
@@ -63,7 +63,7 @@ WSGI_APPLICATION = 'hackathon.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',  # Ensure this points to your existing database file
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 
@@ -101,20 +101,26 @@ AUTHENTICATION_BACKENDS = (
     'allauth.account.auth_backends.AuthenticationBackend',
 )
 
-SITE_ID = int(os.getenv('SITE_ID', 1))
+SITE_ID = 1
 
 LOGIN_REDIRECT_URL = '/'
-LOGOUT_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/accounts/login/'
+LOGIN_URL = '/accounts/login/'
 
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_VERIFICATION = 'none'
 ACCOUNT_USERNAME_REQUIRED = False
 
-EMAIL_BACKEND = os.getenv('EMAIL_BACKEND', 'django.core.mail.backends.console.EmailBackend')
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 CSRF_TRUSTED_ORIGINS = [
     'https://8000-wgwhitecodi-hackathon30-qkmdebagt9a.ws-eu114.gitpod.io',
     'https://*.herokuapp.com',
 ]
+
+
+
+
+
 
 

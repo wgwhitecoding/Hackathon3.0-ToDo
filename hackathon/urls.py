@@ -25,8 +25,15 @@ urlpatterns = [
     path('add_todo/', todo_views.add_todo, name='add_todo'),
     path('edit_todo/<int:todo_id>/', todo_views.edit_todo, name='edit_todo'),
     path('update_stage/<int:todo_id>/<str:stage>/', todo_views.update_stage, name='update_stage'),
-    path('register/', todo_views.register, name='register'),
 ]
+
+
+
+
+
+
+
+
 
 
 
