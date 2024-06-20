@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<h1>Kanban Board</h1>
+<div class="kanban-board">
+    <div class="kanban-column" id="todo-column">
+        <h2>To Do</h2>
+        <div id="todo-items">
+            {% for todo in todos %}
+            {% if todo.stage == 'todo' %}
+            <div class="kanban-item" data-id="{{ todo.id }}">
+                <h3>{{ todo.title }}</h3>
+                <p>{{ todo.description }}</p>
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+    <div class="kanban-column" id="inprogress-column">
+        <h2>In Progress</h2>
+        <div id="inprogress-items">
+            {% for todo in todos %}
+            {% if todo.stage == 'in_progress' %}
+            <div class="kanban-item" data-id="{{ todo.id }}">
+                <h3>{{ todo.title }}</h3>
+                <p>{{ todo.description }}</p>
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+    <div class="kanban-column" id="done-column">
+        <h2>Done</h2>
+        <div id="done-items">
+            {% for todo in todos %}
+            {% if todo.stage == 'done' %}
+            <div class="kanban-item" data-id="{{ todo.id }}">
+                <h3>{{ todo.title }}</h3>
+                <p>{{ todo.description }}</p>
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.14.0/Sortable.min.js"></script>
+<script src="{% static 'js/kanban_board.js' %}"></script>
+{% endblock %}
+
+
+
+
