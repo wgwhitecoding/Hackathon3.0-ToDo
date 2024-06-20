@@ -10,7 +10,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-@p9wgtikz)kwpz85dn8m&%tnd$bg_4flkq%pkf^#wq5pmjc=r&')
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = ['8000-wgwhitecodi-hackathon30-qkmdebagt9a.ws-eu114.gitpod.io']
+ALLOWED_HOSTS = ['8000-wgwhitecodi-hackathon30-qkmdebagt9a.ws-eu114.gitpod.io','.herokuapp.com'] 
 
 INSTALLED_APPS = [
     'django.contrib.admin',
