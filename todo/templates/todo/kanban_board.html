@@ -39,9 +39,9 @@
                         <div class="form-group">
                             <label for="priority">Priority</label>
                             <select class="form-control" name="priority" required>
-                                <option value="low">Low</option>
-                                <option value="medium">Medium</option>
-                                <option value="high">High</option>
+                                <option value="low">Low <span class="priority-circle low"></span></option>
+                                <option value="medium">Medium <span class="priority-circle medium"></span></option>
+                                <option value="high">High <span class="priority-circle high"></span></option>
                             </select>
                         </div>
                         <div class="btn-group">
@@ -83,9 +83,9 @@
                                         <div class="form-group">
                                             <label for="priority">Priority</label>
                                             <select class="form-control {{ todo.priority }}" name="priority" disabled>
-                                                <option value="low" {% if todo.priority == 'low' %}selected{% endif %}>Low</option>
-                                                <option value="medium" {% if todo.priority == 'medium' %}selected{% endif %}>Medium</option>
-                                                <option value="high" {% if todo.priority == 'high' %}selected{% endif %}>High</option>
+                                                <option value="low" {% if todo.priority == 'low' %}selected{% endif %}>Low <span class="priority-circle low"></span></option>
+                                                <option value="medium" {% if todo.priority == 'medium' %}selected{% endif %}>Medium <span class="priority-circle medium"></span></option>
+                                                <option value="high" {% if todo.priority == 'high' %}selected{% endif %}>High <span class="priority-circle high"></span></option>
                                             </select>
                                         </div>
                                         <div class="btn-group">
@@ -135,9 +135,9 @@
                                         <div class="form-group">
                                             <label for="priority">Priority</label>
                                             <select class="form-control {{ todo.priority }}" name="priority" disabled>
-                                                <option value="low" {% if todo.priority == 'low' %}selected{% endif %}>Low</option>
-                                                <option value="medium" {% if todo.priority == 'medium' %}selected{% endif %}>Medium</option>
-                                                <option value="high" {% if todo.priority == 'high' %}selected{% endif %}>High</option>
+                                                <option value="low" {% if todo.priority == 'low' %}selected{% endif %}>Low <span class="priority-circle low"></span></option>
+                                                <option value="medium" {% if todo.priority == 'medium' %}selected{% endif %}>Medium <span class="priority-circle medium"></span></option>
+                                                <option value="high" {% if todo.priority == 'high' %}selected{% endif %}>High <span class="priority-circle high"></span></option>
                                             </select>
                                         </div>
                                         <div class="btn-group">
@@ -187,9 +187,9 @@
                                         <div class="form-group">
                                             <label for="priority">Priority</label>
                                             <select class="form-control {{ todo.priority }}" name="priority" disabled>
-                                                <option value="low" {% if todo.priority == 'low' %}selected{% endif %}>Low</option>
-                                                <option value="medium" {% if todo.priority == 'medium' %}selected{% endif %}>Medium</option>
-                                                <option value="high" {% if todo.priority == 'high' %}selected{% endif %}>High</option>
+                                                <option value="low" {% if todo.priority == 'low' %}selected{% endif %}>Low <span class="priority-circle low"></span></option>
+                                                <option value="medium" {% if todo.priority == 'medium' %}selected{% endif %}>Medium <span class="priority-circle medium"></span></option>
+                                                <option value="high" {% if todo.priority == 'high' %}selected{% endif %}>High <span class="priority-circle high"></span></option>
                                             </select>
                                         </div>
                                         <div class="btn-group">
@@ -214,4 +214,5 @@
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.14.0/Sortable.min.js"></script>
 <script src="{% static 'js/kanban_board.js' %}"></script>
 {% endblock scripts %}
+
 

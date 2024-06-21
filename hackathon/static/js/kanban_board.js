@@ -36,11 +36,13 @@ document.addEventListener('DOMContentLoaded', function() {
         todoForm.classList.remove('d-none');
         newTodoForm.reset();
         todoIdField.value = '';
-        moveToTop(todoForm, addTodoButton.parentElement);
+        addTodoButton.parentElement.insertBefore(todoForm, addTodoButton.nextSibling);
+        disableScrolling(todoColumn);
     });
 
     document.querySelector('.cancel-todo').addEventListener('click', function() {
         todoForm.classList.add('d-none');
+        enableScrolling(todoColumn);
     });
 
     newTodoForm.addEventListener('submit', function(event) {
@@ -85,9 +87,9 @@ document.addEventListener('DOMContentLoaded', function() {
                                 <div class="form-group">
                                     <label for="priority">Priority</label>
                                     <select class="form-control ${newTodo.priority}" name="priority" disabled>
-                                        <option value="low" ${newTodo.priority === 'low' ? 'selected' : ''}>Low</option>
-                                        <option value="medium" ${newTodo.priority === 'medium' ? 'selected' : ''}>Medium</option>
-                                        <option value="high" ${newTodo.priority === 'high' ? 'selected' : ''}>High</option>
+                                        <option value="low" ${newTodo.priority === 'low' ? 'selected' : ''}>Low <span class="priority-circle low"></span></option>
+                                        <option value="medium" ${newTodo.priority === 'medium' ? 'selected' : ''}>Medium <span class="priority-circle medium"></span></option>
+                                        <option value="high" ${newTodo.priority === 'high' ? 'selected' : ''}>High <span class="priority-circle high"></span></option>
                                     </select>
                                 </div>
                                 <div class="btn-group">
@@ -107,6 +109,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     todoColumn.insertAdjacentHTML('beforeend', newTodoHtml);
                 }
                 todoForm.classList.add('d-none');
+                enableScrolling(todoColumn);
                 newTodoForm.reset();
             } else {
                 console.error('Failed to add todo', xhr.responseText);
@@ -158,8 +161,16 @@ document.addEventListener('DOMContentLoaded', function() {
     function toggleTaskDetails(id) {
         var item = document.querySelector(`.kanban-item[data-id="${id}"]`);
         var details = item.querySelector('.kanban-details');
+        var kanbanColumn = item.closest('.kanban-column');
         details.classList.toggle('d-none');
-        moveToTop(item, item.closest('.kanban-column'));
+        if (!details.classList.contains('d-none')) {
+            kanbanColumn.insertBefore(item, kanbanColumn.firstChild.nextSibling); // Position below the "Add ToDo" button
+            disableScrolling(kanbanColumn);
+        } else {
+            // Move the item back to its original position after closing
+            kanbanColumn.appendChild(item);
+            enableScrolling(kanbanColumn);
+        }
     }
 
     function enableTaskEditing(id) {
@@ -191,6 +202,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 item.querySelector('.form-control[name="priority"]').className = `form-control ${updatedTodo.priority}`;
                 item.querySelector('.form-control[name="priority"]').value = updatedTodo.priority;
                 closeTaskDetails(id);
+                var kanbanColumn = item.closest('.kanban-column');
+                kanbanColumn.appendChild(item);
+                enableScrolling(kanbanColumn);
             } else {
                 console.error('Failed to update todo', xhr.responseText);
                 alert('Failed to update todo: ' + xhr.responseText);
@@ -216,6 +230,9 @@ document.addEventListener('DOMContentLoaded', function() {
         saveButton.classList.add('d-none');
         editButton.classList.remove('d-none');
         details.classList.add('d-none');
+        var kanbanColumn = item.closest('.kanban-column');
+        kanbanColumn.appendChild(item);
+        enableScrolling(kanbanColumn);
     }
 
     function deleteTask(id) {
@@ -225,6 +242,9 @@ document.addEventListener('DOMContentLoaded', function() {
         xhr.onload = function() {
             if (xhr.status === 200) {
                 document.querySelector(`.kanban-item[data-id="${id}"]`).remove();
+                enableScrolling(todoColumn);
+                enableScrolling(inProgressColumn);
+                enableScrolling(doneColumn);
             } else {
                 console.error('Failed to delete task', xhr.responseText);
                 alert('Failed to delete task: ' + xhr.responseText);
@@ -294,8 +314,12 @@ document.addEventListener('DOMContentLoaded', function() {
         xhr.send(JSON.stringify({ priority: priority }));
     }
 
-    function moveToTop(element, container) {
-        container.insertBefore(element, container.firstChild);
+    function disableScrolling(element) {
+        element.style.overflow = 'hidden';
+    }
+
+    function enableScrolling(element) {
+        element.style.overflow = 'auto';
     }
 
     function getCookie(name) {
@@ -313,6 +337,11 @@ document.addEventListener('DOMContentLoaded', function() {
         return cookieValue;
     }
 });
+
+
+
+
+
 
 
 

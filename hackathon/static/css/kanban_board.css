@@ -45,6 +45,16 @@ body {
     padding: 10px;
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+
+.add-todo {
+    position: sticky;
+    top: 0;
+    width: 100%;
+    z-index: 1;
+    background-color: #0c0c0c;
+    margin-bottom: 10px;
 }
 
 .kanban-summary {
@@ -114,6 +124,7 @@ body {
     flex: 1;
     margin: 2px;
 }
+
 
 
 
